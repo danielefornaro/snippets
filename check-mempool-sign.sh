@@ -8,6 +8,7 @@ while [ true ]; do
   HEX=$(bitcoin-cli getnewblockhex)
   SIGN=$(bitcoin-cli signblock $HEX)
   BLOCKRESULT=$(bitcoin-cli combineblocksigs $HEX '''["'''$SIGN'''"]''')
+  SIGNBLOCK=$(bitcoin-cli $BLOCKRESULT | python3 -c "import sys, json; print(json.load(sys.stdin)['hex'])")
   bitcoin-cli submitblock $SIGNBLOCK
  else
   echo "There are NO tx in mempool"
