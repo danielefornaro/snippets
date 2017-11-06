@@ -70,7 +70,7 @@ class MyResource(resource.Resource):
         try:
             address = MyResource.get_address(phone)
         except:
-            err = "can't lookup address from phone"
+            err = "can't lookup address from phone " + str(phone)
             print(err)
             return err
 
