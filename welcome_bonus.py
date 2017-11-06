@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import bitcoin.rpc
 from twisted.internet import reactor
 from twisted.web import resource, server
@@ -7,6 +9,7 @@ import os
 API_KEY = os.environ['WELCOME_BONUS_API_KEY']
 VALUE = os.environ['WELCOME_BONUS_VALUE']
 ENDPOINT = os.environ['WELCOME_BONUS_API_ENDPOINT']
+
 
 class MyResource(resource.Resource):
     isLeaf = True
@@ -47,13 +50,17 @@ class MyResource(resource.Resource):
         raise Exception
 
     @staticmethod
-    def send_welcome_bonus(address):
+    def send_welcome_bonus(address,phone):
         proxy = bitcoin.rpc.Proxy()
         print(proxy.getinfo())
         isvalid = proxy._call('validateaddress', str(address))['isvalid']
-        print("Is address valid?" + isvalid)
+        print("Is address valid? " + str(isvalid))
         if isvalid:
             proxy.sendtoaddress(address, VALUE)
+            print("sendtoaddress called")
+            MyResource.set_welcome_bonus(phone)
+            print("set_welcome_bonus called")
+
             return 'sent'
         else:
             return 'invalid address'
@@ -81,7 +88,7 @@ class MyResource(resource.Resource):
             print(to_phone)
             return to_phone
 
-        return MyResource.send_welcome_bonus(address)
+        return MyResource.send_welcome_bonus(address,phone)
 
 
 site = server.Site(MyResource())
