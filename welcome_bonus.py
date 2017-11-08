@@ -69,8 +69,8 @@ class MyResource(resource.Resource):
         phone = request.postpath[0].decode('utf-8')
         try:
             address = MyResource.get_address(phone)
-        except:
-            err = "can't lookup address from phone " + str(phone)
+        except Exception as e:
+            err = "can't lookup address from phone " + str(phone) + " " + str(e)
             print(err)
             return err
 
@@ -78,8 +78,8 @@ class MyResource(resource.Resource):
 
         try:
             sent = MyResource.is_welcome_bonus_sent(phone)
-        except:
-            err = "can't check if welcome bonus was already sent"
+        except Exception as e:
+            err = "can't check if welcome bonus was already sent " + str(e)
             print(err)
             return err
 
