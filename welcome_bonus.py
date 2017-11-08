@@ -66,6 +66,7 @@ class MyResource(resource.Resource):
             return 'invalid address'
 
     def render_GET(self, request):
+        request.setResponseCode(200)
         phone = request.postpath[0].decode('utf-8')
         try:
             address = MyResource.get_address(phone)
@@ -90,6 +91,8 @@ class MyResource(resource.Resource):
 
         result = MyResource.send_welcome_bonus(address, phone)
         print(result)
+
+
 
         return result
 
