@@ -88,8 +88,10 @@ class MyResource(resource.Resource):
             print(to_phone)
             return to_phone
 
-        return MyResource.send_welcome_bonus(address,phone)
+        result = MyResource.send_welcome_bonus(address, phone)
+        print(result)
 
+        return result
 
 site = server.Site(MyResource())
 
