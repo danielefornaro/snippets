@@ -24,14 +24,18 @@ const main = async () =>
         
         while(process.env.infinity)
         {
-            const memPool = await client.fetch('getmempoolinfo');
-            console.log("mempool size: " + memPool.size);
-            if(memPool.size > 0)
+            const list1 = await getListMemPool();
+            if(list1.length > 0)
             {
-                const res = await signBlock();
-                console.log(res);
+                await sleep(process.env.wait);
+                const list2 = await getListMemPool();
+                if(list1.some(r => list2.includes(r)))
+                {
+                    const res = await signBlock();
+                    console.log(res);
+                }
             }
-            await sleep(process.env.wait);                        
+            await sleep(process.env.wait);          
         }
 
         const res = await signBlock();
@@ -63,6 +67,18 @@ const sleep = (ms) =>
 {
     const setTimeouty = promisify(setTimeout);
     return setTimeouty(ms);
+}
+
+const getMemPoolSize = async () =>
+{
+    const memPool = await client.fetch('getmempoolinfo');
+    return memPool.size;
+}
+
+const getListMemPool = async () =>
+{
+    const memPool = await client.fetch('getrawmempool', false);
+    return memPool;
 }
 
 main();
