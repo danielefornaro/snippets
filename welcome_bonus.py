@@ -78,7 +78,7 @@ class MyResource(resource.Resource):
         print("Is address valid? " + str(isvalid))
         if isvalid:
 
-            sendwelcometoaddress(proxy, address)
+            MyResource.sendtoaddress(proxy, address, VALUE)
             print("sendtoaddress called")
             MyResource.set_welcome_bonus(phone)
             print("set_welcome_bonus called")
