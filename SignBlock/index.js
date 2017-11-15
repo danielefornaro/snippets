@@ -77,7 +77,7 @@ const getMemPoolSize = async () =>
 
 const getListMemPool = async () =>
 {
-    const memPool = await client.fetch('getrawmempool', [false]);
+    const memPool = await client.fetch('Signblock', [false]);
     return memPool;
 }
 
