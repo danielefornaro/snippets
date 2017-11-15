@@ -17,6 +17,7 @@ class MyResource(resource.Resource):
     @staticmethod
     def sendtoaddress(proxy, address, value):
         listunspent = proxy._call('listunspent', 0, 9999999, [], True, {"minimumAmount": value})
+        print(listunspent)
         if len(listunspent) == 0:
             print("there aren't any available unspent")
             raise Exception
@@ -24,7 +25,7 @@ class MyResource(resource.Resource):
         change = str(proxy._call('getnewaddress'))
         output = {}
         output[address] = value
-        output[change] = float(firstunspent['amount']) - value
+        output[change] = float(firstunspent['amount']) - float(value)
         print(output)
         rawtx = proxy._call('createrawtransaction', [{"txid": firstunspent['txid'], "vout": firstunspent['vout']}], output )
         print(rawtx)
