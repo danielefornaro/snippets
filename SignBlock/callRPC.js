@@ -28,6 +28,7 @@ class callRPC
             }
             const body = JSON.stringify(bodyJSON);
             const res = await fetchPromise(this.socket, { method: 'POST',  headers: this.header, body: body})
+            //console.log("status code: " + res.status + " (" + res.statusText + ")" );
             //console.log("counter: " + this.counter);
             const json = await res.json();
             if(json.error) throw new Error(json.error.message);

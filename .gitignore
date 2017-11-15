@@ -1,3 +1,4 @@
 .idea/
 
-.Signblock/node_modules/
+Signblock/node_modules/
+Signblock/.vscode/
