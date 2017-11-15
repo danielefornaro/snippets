@@ -15,6 +15,27 @@ class MyResource(resource.Resource):
     isLeaf = True
 
     @staticmethod
+    def sendtoaddress(proxy, address, value):
+        listunspent = proxy._call('listunspent', 0, 9999999, [], True, {"minimumAmount": value})
+        if len(listunspent) == 0:
+            print("there aren't any available unspent")
+            raise Exception
+        firstunspent = listunspent[0]
+        change = str(proxy._call('getnewaddress'))
+        output = {}
+        output[address] = value
+        output[change] = float(firstunspent['amount']) - value
+        print(output)
+        rawtx = proxy._call('createrawtransaction', [{"txid": firstunspent['txid'], "vout": firstunspent['vout']}], output )
+        print(rawtx)
+        signedrawtx = proxy._call('signrawtransaction', rawtx)
+        signedrawtx = signedrawtx['hex']
+        print(signedrawtx)
+        result = proxy._call('sendrawtransaction', signedrawtx)
+        print(result)
+
+
+    @staticmethod
     def get_address(phone):
         r = requests.get(ENDPOINT + '/pn2a/v1/address/' + phone)
         if r.status_code != 200:
@@ -56,7 +77,8 @@ class MyResource(resource.Resource):
         isvalid = proxy._call('validateaddress', str(address))['isvalid']
         print("Is address valid? " + str(isvalid))
         if isvalid:
-            proxy.sendtoaddress(address, VALUE)
+
+            sendwelcometoaddress(proxy, address)
             print("sendtoaddress called")
             MyResource.set_welcome_bonus(phone)
             print("set_welcome_bonus called")
@@ -100,3 +122,6 @@ site = server.Site(MyResource())
 
 reactor.listenTCP(80, site)
 reactor.run()
+
+
+#  bitcoin-cli listunspent 1 99999 "[]" true ' { "minimumAmount": 0.06 }'
